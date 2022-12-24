@@ -68,11 +68,24 @@ public class OrderRepository {
     }
 
     public int getOrdersLeftAfterGivenTimeByPartnerId(String time, String PartnerID){
-        return 0;
+        int count = 0;
+        int deliveryTime = convertedTime(time);
+        List<String> orderList = orderPartnerPairing.get(PartnerID);
+        for(String orderId: orderList){
+            if(listOfOrders.get(orderId).getDeliveryTime() > deliveryTime)
+                count++;
+        }
+        return count;
     }
 
     public String getLastDeliveryTimeByPartnerId(String PartnerID){
-        return null;
+        int maxTime = 0;
+        List<String> orderList = orderPartnerPairing.get(PartnerID);
+        for(String orderId: orderList){
+            maxTime = Math.max(listOfOrders.get(orderId).getDeliveryTime(), maxTime);
+        }
+        String Time = Integer.toString(maxTime);
+        return Time;
     }
 
     public void deletePartnerById(String PartnerID){
@@ -97,5 +110,12 @@ public class OrderRepository {
             }
         }
 
+    }
+
+    public int convertedTime(String deliveryTime){
+        int HH = Integer.valueOf(deliveryTime.substring(0, 2));
+        int MM = Integer.valueOf(deliveryTime.substring(3, 5));
+        int convertedTime = HH*60 + MM;
+        return convertedTime;
     }
 }
