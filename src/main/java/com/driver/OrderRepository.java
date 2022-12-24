@@ -76,10 +76,26 @@ public class OrderRepository {
     }
 
     public void deletePartnerById(String PartnerID){
-
+        listOfPartners.remove(PartnerID);
+        if(orderPartnerPairing.containsKey(PartnerID)){
+            for(String order : orderPartnerPairing.keySet()){
+                orderPartnerPairing.remove(order);
+            }
+        }
     }
 
     public void deleteOrderById(String OrderID){
+        listOfOrders.remove(OrderID);
+
+        for(List<String> orderIds : orderPartnerPairing.values()) {
+
+            for(String order : orderIds) {
+                if(order.equals(OrderID)) {
+                    orderIds.remove(OrderID);
+                    return;
+                }
+            }
+        }
 
     }
 }
